@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" type="text/css" href="../test-app/styles.css" />
+  <title>Test Application - Lab 2</title>
+  <script type="module" src="../test-app/index.js"></script>
+</head>
+
+<body>
+  <header>
+    <h1>Test Application - Lab 2</h1>
+  </header>
+  <main>
+    <form id="data-form" name="data-form">
+      <fieldset id="data-input">
+          <label for="your-data">Input data</label><br>
+          <input type="text" name="your-data" id="your-data" required pattern="[a-zA-Öa-ö]+" autocomplete="off">
+          <input type="submit" value="Submit" id="submit-data">
+      </fieldset>
+    </form>
+    <canvas id="my-canvas"></canvas>
+  </main>
+  <footer></footer>
+</body>
+
+</html>

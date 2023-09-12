@@ -1,0 +1,23 @@
+{
+  "name": "1dv610-lab2",
+  "version": "1.0.0",
+  "description": "Laboration 2 - 1DV610 ",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beatalinnea/1DV610-LAB2.git"
+  },
+  "author": "Beata Eriksson <be222gr@student.lnu.se>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/beatalinnea/1DV610-LAB2/issues"
+  },
+  "homepage": "https://github.com/beatalinnea/1DV610-LAB2#readme",
+  "devDependencies": {
+    "@lnu/eslint-config": "^1.1.10"
+  }
+}

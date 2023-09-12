@@ -11,4 +11,4 @@ Högre:
 - Buggrapporter / issues
 - Installationsbeskrivning här
 - Kommunikation om beroenden, språk och versioner
-- Versionsnumrering och releaser
+- Versionsnumrering och releaser (skriv att detta är ett studentprojekt)
