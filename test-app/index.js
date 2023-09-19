@@ -4,9 +4,11 @@
  * @author Beata Eriksson <be222gr@student.lnu.se>
  * @version 1.0.0
  */
-import { hello, drawRectangle } from '../src/index.js'
+import { CanvasDrawer } from '../src/index.js'
 
 const myCanva = document.querySelector('#my-canvas')
-drawRectangle(myCanva, 2, 2, 20, 20)
+const myDrawer = new CanvasDrawer(myCanva)
 
-console.log(hello('beata'))
+myDrawer.drawRectangle(2, 2)
+
+console.log(myDrawer.hello('beata'))

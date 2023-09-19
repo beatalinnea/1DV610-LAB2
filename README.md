@@ -12,3 +12,4 @@ Högre:
 - Installationsbeskrivning här
 - Kommunikation om beroenden, språk och versioner
 - Versionsnumrering och releaser (skriv att detta är ett studentprojekt)
+- Förklara vart test-appen finns och hur den fungerar
