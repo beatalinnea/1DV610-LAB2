@@ -6,12 +6,12 @@ Skriv en kortare reflektion (halv sida 12pt) där du beskriver dina erfarenheter
 
 ## Kodkvalitetskrav
 
-Ha med:
+Ha med (ca 3x0.5 sida?):
 - tabellreflektioner för kap 2 med fem namn
 - kort reflektion för hela kap 2
 - tabellreflektioner för kap 3 med fem funktioner
 - kort reflektion för hela kap 3
-- Reflektion om kodkvalitet mer generellt
+- Reflektion om kodkvalitet mer generellt (labben + allt)
 
 ### Namngivning ( kapitel 2 )
 Läs kapitel 2 i Clean Code. Skapa en tabell över fem namn på identifierare (Ex. namn på klasser, metoder/funktioner och variabler) som finns i ditt publika interface hos modulen. Det publika interfacet är alltså den kod som andra programmerare ska använda. Utgå ifrån kapitel-2s titlar och ange de viktigaste “reglerna” som applicerats eller skulle kunna appliceras på just ditt namn. Försök variera regler mellan namnen så att inte alla har samma titlar applicerade. Visa upp att ni förstår flera regler och inte bara ett par.
