@@ -1,4 +1,21 @@
 # Verifiering och validering av din modul. 
+
+Det ska vara En Enda testrapport
+
+För mig som examinator:
+det behöver finnas tester
+jag behöver kunna se vad som finns, vad som fungerar och vad som inte fungerar
+jag behöver bli övertygad om att ovanstående är korrekt
+jag vill inte spendera mycket tid för att förstå det.
+För en användare av modulen (en programmerare)
+behöver veta vad som finns, vad som fungerar och inte
+behöver känna tillit till funktion för att vilja använda det
+vill inte spendera tid för att förstå det.
+För en vidareutvecklare av modulen
+behöver veta vad som finns, vad som fungerar och inte fungerar
+vill kunna ändra, testa och se vad som nu fungerar och inte fungerar
+vill veta hur den skall kunna skapa nya tester när den skapar ny funktionalitet
+
 För att nå samförstånd om kodens funktion behöver den testas. Hur detta sker är mindre viktigt än att det sker. Som jag ser det finns det tre val ( men fler varianter kan finnas ). Oavsett val kommer ni redovisa för mig med hjälp utav en testrapport i Markdown där det tydligt framgår vad som är testat, hur det är testat och vilket utfall det fick. Se även betygskraven.
 
 

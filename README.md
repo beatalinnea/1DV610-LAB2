@@ -1,5 +1,8 @@
 # 1DV610-LAB2
 Laboration 2 - 1DV610 Mjukvarukvalitet
+ beskriv med några meningar vad ditt bibliotek gör och inte gör
+
+ Bskriv alla publika metoder och vad de förväntar sig för argument
 
 ## Krav
 - Det finns en läsbar dokumentation på github
