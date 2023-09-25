@@ -98,24 +98,35 @@ export class PollDisplay {
     }
   }
 
-  addPollValues (array) {
+  addPollValues (data) {
+    if (!Array.isArray(data)) {
+      throw new Error('The argument must be an array')
+    }
+    const sorted = this.#sortArray(data)
     if (this.#hasData()) {
       this.#xCollection = []
       this.#yCollection = []
       this.#createBase(this.#canvas.width, this.#canvas.height)
     }
-    for (let i = 0; i < array.length; i++) {
+    for (let i = 0; i < sorted.length; i++) {
       // bryt ut nedan i egen metod
-      if (this.#xCollection.includes(array[i])) {
-        const index = this.#xCollection.indexOf(array[i])
+      if (this.#xCollection.includes(sorted[i])) {
+        const index = this.#xCollection.indexOf(sorted[i])
         this.#yCollection[index] = this.#yCollection[index] + 1
       } else {
-        this.#xCollection.push(array[i])
+        this.#xCollection.push(sorted[i])
         this.#yCollection.push(1)
       }
     }
     this.#buildPolls()
     this.#addBackgroundCounter()
+  }
+
+  #sortArray (array) {
+    return Array.from(array)
+      .sort((a, b) => {
+        return a - b
+      })
   }
 
   #buildPolls () {
@@ -173,6 +184,12 @@ export class PollDisplay {
   }
 
   addHeadline (string) {
+    if (typeof string !== 'string') {
+      throw new Error('The argument must be a string')
+    }
+    if (this.#headline) {
+      this.#clearHeadline()
+    }
     this.context.fillStyle = '#000000'
     this.context.font = '15px serif'
     this.context.fillText(`${string}`, 15, 20)
@@ -195,6 +212,14 @@ export class PollDisplay {
       votes = votes + this.#yCollection[i]
     }
     return votes
+  }
+
+  #clearHeadline () {
+    this.#headline = null
+    this.context.clearRect(0, 0, this.#canvas.width, 30)
+    this.context.fillStyle = this.#backgroundColor
+    this.context.fillRect(0, 0, this.#canvas.width, 30)
+    this.#addFrame()
   }
 
   removeHeadline () {

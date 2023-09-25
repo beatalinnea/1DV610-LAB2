@@ -4,6 +4,8 @@ Laboration 2 - 1DV610 Mjukvarukvalitet
 
  Bskriv alla publika metoder och vad de förväntar sig för argument
 
+ npm run dev (vite)
+
 ## Krav
 - Det finns en läsbar dokumentation på github
 
