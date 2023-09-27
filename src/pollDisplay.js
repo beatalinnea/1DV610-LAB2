@@ -49,7 +49,6 @@ export class PollDisplay {
   #createBase (width, height) {
     this.#canvas.height = height
     this.#canvas.width = width
-
     this.#addBackground()
   }
 
@@ -62,13 +61,11 @@ export class PollDisplay {
   changeBackgroundColor (color) {
     this.#backgroundColor = color
     this.#addBackground()
-
     this.#addExistingValues()
   }
 
-  reSize (width, height) {
+  resize (width, height) {
     this.#createBase(width, height)
-
     this.#addExistingValues()
   }
 
@@ -139,8 +136,11 @@ export class PollDisplay {
 
     for (let i = 0; i < this.#xCollection.length; i++) {
       const pollHeightPoint = this.#canvas.height - (this.#yCollection[i] * onePartOfHeight)
+
+      // draw poll
       this.#drawOnePoll(pollBasePoint, pollHeightPoint)
 
+      // add text to it
       this.context.fillStyle = '#000000'
       this.context.font = '15px serif'
       this.context.fillText(`${this.#xCollection[i]}`, pollBasePoint + 5, pollHeightPoint - 5)
@@ -183,8 +183,8 @@ export class PollDisplay {
     return mostVotes
   }
 
-  addHeadline (string) {
-    if (typeof string !== 'string') {
+  addHeadline (text) {
+    if (typeof text !== 'string') {
       throw new Error('The argument must be a string')
     }
     if (this.#headline) {
@@ -192,9 +192,9 @@ export class PollDisplay {
     }
     this.context.fillStyle = '#000000'
     this.context.font = '15px serif'
-    this.context.fillText(`${string}`, 15, 20)
+    this.context.fillText(`${text}`, 15, 20)
 
-    this.#headline = string
+    this.#headline = text
   }
 
   addTotalVotes () {
@@ -202,7 +202,6 @@ export class PollDisplay {
     this.context.fillStyle = '#000000'
     this.context.font = '15px serif'
     this.context.fillText(`Votes: ${numberOfVotes}`, this.#canvas.width - 80, 20)
-
     this.#amountOfVotes = numberOfVotes
   }
 

@@ -23,7 +23,7 @@ try {
   myPollDisplay.changeBackgroundColor('#efdefd')
 
   // Resize canvas
-  myPollDisplay.reSize(500, 300)
+  myPollDisplay.resize(500, 300)
 
   // Add headline again (should change)
   myPollDisplay.addHeadline('Vad röstar du på?')
