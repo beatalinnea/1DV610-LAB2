@@ -5,8 +5,7 @@ Min modul har testats genom att skapa ett användargränssnitt i webbläsaren - 
 
 För att starta test-appen används Vite som är en devDependency i projektet. Efter att projektet klonats installeras projektets beroenden med ’npm install’. För att starta test-appen används kommandot ’npm run dev’.
 
-Test-appen innehåller 12 metoder som anropas när appen startar. För att testa modulen
-skapar test-appen en instans av modulens (enda) huvudklass PollDisplay och testar det publika interfacet genom att anropa PollDisplays metoder.
+Test-appen innehåller 12 metoder som anropas när appen startar. För att testa modulen skapar test-appen en instans av modulens (enda) huvudklass PollDisplay och testar det publika interfacet genom att anropa PollDisplays metoder. Testningen har skett genom att test-apps metodanrop har kommenterats bort för att inledningsvis köra det första metodanropet - sedan lägga till det andra, och till slut köra samtliga testmetoder. Observera att tre av testmetoderna förväntas att ge felmeddelanden i konsollen - dessa behöver testas separat då metoderna som anropas efter ett fel inte kommer att köras.
 
 ## Testrapport
 | **Vad som testats (metodnamn/krav)** | **Hur det testats** | **Testresultat** |
