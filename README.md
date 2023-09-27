@@ -17,28 +17,28 @@ By creating a new PollDisplay instance, you will send your chosen Canvas Element
 
 ## Interface:
 Once you have created your PollDisplay object you can call the methods provided on it.
-- addPollValues(data)
-Argument type: Array
-Explaination: When calling addPollValues(data) each unique element within the array of data will represent one bar in the bar chart. The frequency of each unique element will decide the height of each bar.
+### addPollValues(data)          
+Argument type: Array           
+Explaination: When calling addPollValues(data) each unique element within the array of data will represent one bar in the bar chart. The frequency of each unique element will decide the height of each bar.            
 Note: If PollDisplay already containts data, is viewing a diagram, and the methods get called - all previous data will be reset and a new bar chart will be viewed representing the new data.
-- changeBackgroundColor(color)
-Argument type: String
-Explanation: When calling changeBackgroundColor(color) the background of the bar chart will set to the color sent in as argument. The method expects a valid color code, either written in rgb format('rgb(0,0,255)') or hexadecimal('#00ff00'), or (if valid) the color name ('red').
+### changeBackgroundColor(color)             
+Argument type: String           
+Explanation: When calling changeBackgroundColor(color) the background of the bar chart will set to the color sent in as argument. The method expects a valid color code, either written in rgb format('rgb(0,0,255)') or hexadecimal('#00ff00'), or (if valid) the color name ('red').           
 Note: If the color code is not an actual color, the diagram will not show a color.
-- resize(width, height)
-Argument type: number, number
-Explanation: When calling resize(width, height) the bar chart will adjust to the new size.
+### resize(width, height)             
+Argument type: number, number          
+Explanation: When calling resize(width, height) the bar chart will adjust to the new size.              
 Note: The PollDisplay will not adjust to the size of the data you send in. If the diagram gets to crowded - you can adjust the size, setting a new width or height.
-- addHeadline(text)
-Argument type: String
-Explanation: When calling addHeadline(text) a text will be visible within the canvas above the bar chart. 
+### addHeadline(text)        
+Argument type: String           
+Explanation: When calling addHeadline(text) a text will be visible within the canvas above the bar chart.              
 Note: If you call this when you already have a headline, the new method call will replace the old headline.
-- addTotalVotes()
-Explanation: When calling addTotalVotes() the amount of single values sent used as the data for the bar chart (meaning the total frequency, meaning elements in the array of data) will be viewed as a second headline.
-- getAmountOfVotes()
+### addTotalVotes()           
+Explanation: When calling addTotalVotes() the amount of single values sent used as the data for the bar chart (meaning the total frequency, meaning elements in the array of data) will be viewed as a second headline.          
+### getAmountOfVotes()          
 Explanation: When calling getAmountOfVotes() the method returns the total amount of votes.
 Note: This does not affect the canvas or the bar chart in any way.
-- removeHeadline()
+### removeHeadline()           
 Explanation: When calling removeHeadline() both the headline and the total votes will be removed, if either of them exists to begin with.
 
 ## Example / Test-app
