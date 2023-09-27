@@ -4,6 +4,7 @@
 Utvalda identifierare i det publika interfacet
 
 | Namn och förklaring | Reflektion och regler från Clean Code  |
+|------|---------|
 |addPollValues(data)
 Metod som tar in en array av värden och räknar förekomsten av respektive värde|Do one thing
 Denna metod har många olika sektioner (sections with functions) vilket är ett tecken på att den gör mer än en sak. Vi har felhantering, variabeldeklaration, nästlade kontrollsatser och metodanrop. 
