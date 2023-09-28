@@ -2,20 +2,25 @@
 - BarChart version 1.0.0
 - This is a module created as a student project for Laboration 2 in the course 1DV610 Mjukvarukvalitet at Linnaeus University.
 - This module is written in, and compatible with, JavaScript
+- This module is published as a npm package, view it [here](https://www.npmjs.com/package/very-simple-bar-chart)
 
+## What is BarChart?
 - BarChart provides functionality for your Canvas Element. The purpose of BarChart is for you to be able to send data to the BarChart object - which will create a diagram, a bar chart, showing the frequency for each value in the data you send in. 
-- The data sent in must be an array where each element counts as a vote for the value that the element represents. Meaning, adding [3, 3, 5] will give two votes for '3' and one vote for '5'.
+- The data sent in must be an array where each element counts as a vote for the value that the element represents. Meaning, adding [3, 3, 5] will give two votes for '3' and one vote for '5'. You can also choose to add a headline for the bar chart, as shown in the example below.
 
 <img src="test-app/img/examplechart.png" alt="Example Chart" width="600"/>
 
 
-## Usage and instructions
-- At this stage the module can be used by cloning this repository and importing the file barChart.js within the src folder.
+## Instructions
+- The module can be installed as a npm package in your own project by running ```npm i very-simple-bar-chart``` 
+- When installed in your project, you import the package within your file and are then able to create object of the BarChart type.
+```import { BarChart } from 'very-simple-bar-chart'``
+```const barChart = new BarChart(canvas)```
 - For testing and demonstration purposes the project needs to be cloned and dependencies needs to be installed, look further down under 'Example / Test-app'
-- BarChart does NOT create an HTML Canvas Element for you, the constructor needs you Canvas Element as an argument.
+- BarChart does NOT create an HTML Canvas Element for you, the constructor needs a Canvas Element, from your own project, as an argument.
 
 ## Create an instance
-By creating a new BarChart instance, you will send your chosen Canvas Element from your HTML DOM as an argument to the constructor. The methods provided on the BarChart object will modify the diagram to what you prefer.
+By creating a new BarChart instance, you will send your chosen Canvas Element as an argument to the constructor. The methods provided on the BarChart object will modify the diagram to what you prefer.
 
 ## Interface
 Once you have created your BarChart object you can call the methods provided on it.
@@ -52,3 +57,6 @@ The project will now have Vite installed as a devDependency and to start the tes
 
 * The test app
 The test-app is using the public methods provided for BarChart, giving you a context for the usage of the module.
+
+## Bugs / Notes
+I have realized when installing the package with NPM, importing it within my js-file I get a note saying that there is no type declaration for my module. This may occur.

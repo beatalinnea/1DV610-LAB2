@@ -5,7 +5,8 @@
  * @author Beata Eriksson <be222gr@student.lnu.se>
  * @version 1.0.0
  */
-import { BarChart } from '../src/barChart.js'
+
+import { BarChart } from 'very-simple-bar-chart'
 
 const canvas = document.querySelector('#my-canvas')
 
