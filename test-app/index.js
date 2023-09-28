@@ -5,17 +5,17 @@
  * @author Beata Eriksson <be222gr@student.lnu.se>
  * @version 1.0.0
  */
-import { PollDisplay } from '../src/pollDisplay.js'
+import { BarChart } from '../src/barChart.js'
 
 const canvas = document.querySelector('#my-canvas')
 
 try {
-  const myPollDisplay = new PollDisplay(canvas)
+  const barChart = new BarChart(canvas)
   callOnAllTests()
 
   // Run all tests
   function callOnAllTests () {
-    testAddPollValues()
+    testAddValues()
     testAddHeadline()
     testAddTotalVotes()
     testChangeBackgroundColor()
@@ -31,69 +31,69 @@ try {
     testInvalidInstance()
   }
 
-  function testAddPollValues () {
+  function testAddValues () {
     // Add some data to the PollDisplay object
     const data = ['Katt', 'Katt', 'Hund', 'Hund', 'Katt', 'Hamster', 'Orm', 'Orm', 'Orm', 'Krokodil', 'Häst', 'Häst']
-    myPollDisplay.addPollValues(data)
+    barChart.addValues(data)
   }
 
   function testAddHeadline () {
     // Add a headline
-    myPollDisplay.addHeadline('Vilket är ditt favoritdjur?')
+    barChart.addHeadline('Vilket är ditt favoritdjur?')
   }
 
   function testAddTotalVotes () {
     // Display number of votes
-    myPollDisplay.addTotalVotes()
+    barChart.addTotalVotes()
   }
 
   function testChangeBackgroundColor () {
     // Change background color
-    myPollDisplay.changeBackgroundColor('#efdefd')
+    barChart.changeBackgroundColor('#efdefd')
   }
 
   function testResize () {
     // Resize canvas
-    myPollDisplay.resize(500, 300)
+    barChart.resize(500, 300)
   }
 
   function testRemoveHeadline () {
     // Remove headline
-    myPollDisplay.removeHeadline()
+    barChart.removeHeadline()
   }
 
   function testAddNewValues () {
     // New values should be shown
     const dataThree = [1, 1, 2, 3, 3, 4, 5, 6, 6]
-    myPollDisplay.addPollValues(dataThree)
+    barChart.addValues(dataThree)
   }
 
   function testValuesAreBeingSorted () {
     // Values should be sorted
     const dataFour = [3, 4, 9, 10, 11, 12, 8, 4, 5, 6, 6, 6, 7, 7, 8, 10, 6, 8]
-    myPollDisplay.addPollValues(dataFour)
+    barChart.addValues(dataFour)
   }
 
   function testHeadlineChange () {
     // Set new headlines
-    myPollDisplay.addHeadline('Hur många timmer sover du per dag?')
+    barChart.addHeadline('How many hours do you sleep per day?')
   }
 
   function testInvalidHeadline () {
     // Expected error, only accepts strings
-    myPollDisplay.addHeadline(2)
+    barChart.addHeadline(2)
   }
 
   function testInvalidData () {
     // Expected error, only takes arrays
     const dataTwo = 'dog'
-    myPollDisplay.addPollValues(dataTwo)
+    barChart.addValues(dataTwo)
   }
 
   function testInvalidInstance () {
     // Create a PollDisplay object
-    const invalidArgument = new PollDisplay(2)
-    invalidArgument.addPollValues(['test'])
+    const invalidArgument = new BarChart(2)
+    invalidArgument.addValues(['test'])
   }
 } catch (error) {
   console.log(error)

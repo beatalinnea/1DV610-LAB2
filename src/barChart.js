@@ -1,24 +1,30 @@
-/* eslint-disable jsdoc/require-jsdoc */
 /**
- * Class for Canvas
+ * The the main and only class for the BarChart module.
+ *
+ * @author Beata Eriksson <be222gr@student.lnu.se>
+ * @version 1.1.0
  */
-export class PollDisplay {
-  // The canvas element
+
+/**
+ * Class for BarChart.
+ */
+export class BarChart {
+  // The canvas element for the BarChart to be showed within
   #canvas
 
-  // Array of Y values
+  // Array of Y values - amount of votes for each X value
   #yCollection = []
 
-  // Array of X values
+  // Array of X values - contains each unique value
   #xCollection = []
 
-  // The headline
+  // The headline - to be showed next to the polls.
   #headline
 
-  // amounf of votes
+  // amounf of votes - to be showed next to the polls.
   #amountOfVotes
 
-  // background color - set to white
+  // background color - default set to white.
   #backgroundColor = '#ffffff'
 
   /**
@@ -40,38 +46,67 @@ export class PollDisplay {
     }
   }
 
+  /**
+   * Check if the argument is a HTMLCanvasElement.
+   *
+   * @param {any} arg - The argument sent in when creating a new instance of the class.
+   * @throws {Error} - The argument must be a HTMLCanvasElement.
+   */
   #checkIfCanvas (arg) {
     if (!(arg instanceof HTMLCanvasElement)) {
       throw new Error('The argument must be a HTMLCanvasElement')
     }
   }
 
+  /**
+   * Will create the base for the BarChart to be showed within. If no height and width is set - default values will be used.
+   *
+   * @param {number} width - The width of the BarChart.
+   * @param {number} height - The height of the BarChart.
+   */
   #createBase (width, height) {
     this.#canvas.height = height
     this.#canvas.width = width
     this.#addBackground()
   }
 
+  /**
+   * Will add a background to the BarChart. If no color is set - default color will be used.
+   */
   #addBackground () {
     this.context.fillStyle = this.#backgroundColor
     this.context.fillRect(0, 0, this.#canvas.width, this.#canvas.height)
     this.#addFrame()
   }
 
+  /**
+   * Change the background color of the BarChart.
+   *
+   * @param {string} color - The color to be used as background.
+   */
   changeBackgroundColor (color) {
     this.#backgroundColor = color
     this.#addBackground()
     this.#addExistingValues()
   }
 
+  /**
+   * Resize the BarChart.
+   *
+   * @param {number} width - The new width of the BarChart.
+   * @param {number} height - The new height of the BarChart.
+   */
   resize (width, height) {
     this.#createBase(width, height)
     this.#addExistingValues()
   }
 
+  /**
+   * Checks if there is any data or settings in the BarChart. If so - it will add the existing values.
+   */
   #addExistingValues () {
     if (this.#hasData()) {
-      this.#buildPolls()
+      this.#buildBars()
       this.#addBackgroundCounter()
     }
     if (this.#headline) {
@@ -82,11 +117,19 @@ export class PollDisplay {
     }
   }
 
+  /**
+   * Add a frame to the BarChart.
+   */
   #addFrame () {
     this.context.lineWidth = 5
     this.context.strokeRect(0, 0, this.#canvas.width, this.#canvas.height)
   }
 
+  /**
+   * Checks if there is any data in the BarChart.
+   *
+   * @returns {boolean} - true if there is data, false if not.
+   */
   #hasData () {
     if (this.#xCollection.length > 0) {
       return true
@@ -95,7 +138,12 @@ export class PollDisplay {
     }
   }
 
-  addPollValues (data) {
+  /**
+   * Add values to the BarChart.
+   *
+   * @param {any[]} data - The array of data to be added to the BarChart.
+   */
+  addValues (data) {
     if (!Array.isArray(data)) {
       throw new Error('The argument must be an array')
     }
@@ -115,10 +163,16 @@ export class PollDisplay {
         this.#yCollection.push(1)
       }
     }
-    this.#buildPolls()
+    this.#buildBars()
     this.#addBackgroundCounter()
   }
 
+  /**
+   * Sort the array of values.
+   *
+   * @param {any[]} array - The array of values to be sorted.
+   * @returns {any[]} - The sorted array.
+   */
   #sortArray (array) {
     return Array.from(array)
       .sort((a, b) => {
@@ -126,36 +180,48 @@ export class PollDisplay {
       })
   }
 
-  #buildPolls () {
+  /**
+   * Builds the bars for the BarChart.
+   */
+  #buildBars () {
     // + 1 för att skapa marginal för sista pollen
-    let pollBasePoint = this.#canvas.width / (this.#xCollection.length + 1)
-    const distanceBetweenPolls = pollBasePoint
+    let barBasePoint = this.#canvas.width / (this.#xCollection.length + 1)
+    const distanceBetweenBars = barBasePoint
     const maxValue = this.#checkMostVotes()
     // divide with +1 to keep marginal within the canvas
     const onePartOfHeight = this.#canvas.height / (maxValue + 1)
 
     for (let i = 0; i < this.#xCollection.length; i++) {
-      const pollHeightPoint = this.#canvas.height - (this.#yCollection[i] * onePartOfHeight)
+      const barHeightPoint = this.#canvas.height - (this.#yCollection[i] * onePartOfHeight)
 
       // draw poll
-      this.#drawOnePoll(pollBasePoint, pollHeightPoint)
+      this.#drawOneBar(barBasePoint, barHeightPoint)
 
       // add text to it
       this.context.fillStyle = '#000000'
       this.context.font = '15px serif'
-      this.context.fillText(`${this.#xCollection[i]}`, pollBasePoint + 5, pollHeightPoint - 5)
-      pollBasePoint = pollBasePoint + distanceBetweenPolls
+      this.context.fillText(`${this.#xCollection[i]}`, barBasePoint + 5, barHeightPoint - 5)
+      barBasePoint = barBasePoint + distanceBetweenBars
     }
   }
 
-  #drawOnePoll (pollBase, pollHeight) {
+  /**
+   * Draw one bar.
+   *
+   * @param {number} base - The base point of the bar.
+   * @param {number} top - The top point of the bar.
+   */
+  #drawOneBar (base, top) {
     this.context.beginPath()
-    this.context.moveTo(pollBase, this.#canvas.height)
-    this.context.lineTo(pollBase, pollHeight)
+    this.context.moveTo(base, this.#canvas.height)
+    this.context.lineTo(base, top)
     this.context.closePath()
     this.context.stroke()
   }
 
+  /**
+   * Adds horisontal lines to the BarChart background to show the amount of votes for each poll.
+   */
   #addBackgroundCounter () {
     const max = this.#checkMostVotes()
     this.context.lineWidth = 0.2
@@ -173,6 +239,11 @@ export class PollDisplay {
     }
   }
 
+  /**
+   * Checks which poll has the most votes.
+   *
+   * @returns {number} - The number of votes for the poll with most votes.
+   */
   #checkMostVotes () {
     let mostVotes = 0
     for (let i = 0; i < this.#yCollection.length; i++) {
@@ -183,6 +254,11 @@ export class PollDisplay {
     return mostVotes
   }
 
+  /**
+   * Views a headline to the BarChart.
+   *
+   * @param {string} text - The text to be used as headline.
+   */
   addHeadline (text) {
     if (typeof text !== 'string') {
       throw new Error('The argument must be a string')
@@ -197,6 +273,9 @@ export class PollDisplay {
     this.#headline = text
   }
 
+  /**
+   * Views the total amount of votes on the BarChart.
+   */
   addTotalVotes () {
     const numberOfVotes = this.getAmountOfVotes()
     this.context.fillStyle = '#000000'
@@ -205,14 +284,22 @@ export class PollDisplay {
     this.#amountOfVotes = numberOfVotes
   }
 
+  /**
+   * Get the total amount of votes.
+   *
+   * @returns {number} - The total amount of votes.
+   */
   getAmountOfVotes () {
-    let votes = 0
+    let voteCount = 0
     for (let i = 0; i < this.#yCollection.length; i++) {
-      votes = votes + this.#yCollection[i]
+      voteCount = voteCount + this.#yCollection[i]
     }
-    return votes
+    return voteCount
   }
 
+  /**
+   * Clears the headline.
+   */
   #clearHeadline () {
     this.#headline = null
     this.context.clearRect(0, 0, this.#canvas.width, 30)
@@ -221,6 +308,9 @@ export class PollDisplay {
     this.#addFrame()
   }
 
+  /**
+   * Removes the headline and/or the total amount of votes.
+   */
   removeHeadline () {
     this.context.clearRect(0, 0, this.#canvas.width, 30)
     this.#headline = null
