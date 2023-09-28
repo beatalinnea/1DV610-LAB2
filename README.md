@@ -8,7 +8,7 @@
 - BarChart provides functionality for your Canvas Element. The purpose of BarChart is for you to be able to send data to the BarChart object - which will create a diagram, a bar chart, showing the frequency for each value in the data you send in. 
 - The data sent in must be an array where each element counts as a vote for the value that the element represents. Meaning, adding [3, 3, 5] will give two votes for '3' and one vote for '5'. You can also choose to add a headline for the bar chart, as shown in the example below.
 
-<img src="test-app/img/examplechart.png" alt="Example Chart" width="600"/>
+<img src="test-app/img/example.png" alt="Example Chart" width="600"/>
 
 
 ## Instructions
