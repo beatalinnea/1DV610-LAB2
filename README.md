@@ -17,7 +17,7 @@
 ## Create an instance
 By creating a new BarChart instance, you will send your chosen Canvas Element from your HTML DOM as an argument to the constructor. The methods provided on the BarChart object will modify the diagram to what you prefer.
 
-## Interface:
+## Interface
 Once you have created your BarChart object you can call the methods provided on it.
 ### addValues(data)          
 Argument type: Array           

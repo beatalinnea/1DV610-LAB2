@@ -154,7 +154,7 @@ export class BarChart {
       this.#createBase(this.#canvas.width, this.#canvas.height)
     }
     for (let i = 0; i < sorted.length; i++) {
-      // bryt ut nedan i egen metod
+      // NOTE: this would preferabbly be moved to a separate method.
       if (this.#xCollection.includes(sorted[i])) {
         const index = this.#xCollection.indexOf(sorted[i])
         this.#yCollection[index] = this.#yCollection[index] + 1
@@ -184,20 +184,19 @@ export class BarChart {
    * Builds the bars for the BarChart.
    */
   #buildBars () {
-    // + 1 för att skapa marginal för sista pollen
+    // divide with + 1 to keep marginal to the sides
     let barBasePoint = this.#canvas.width / (this.#xCollection.length + 1)
     const distanceBetweenBars = barBasePoint
     const maxValue = this.#checkMostVotes()
-    // divide with +1 to keep marginal within the canvas
+
+    // divide with + 1 to keep marginal to the top.
     const onePartOfHeight = this.#canvas.height / (maxValue + 1)
 
     for (let i = 0; i < this.#xCollection.length; i++) {
       const barHeightPoint = this.#canvas.height - (this.#yCollection[i] * onePartOfHeight)
-
-      // draw poll
       this.#drawOneBar(barBasePoint, barHeightPoint)
 
-      // add text to it
+      // NOTE: adding text should be moved to a separate method.
       this.context.fillStyle = '#000000'
       this.context.font = '15px serif'
       this.context.fillText(`${this.#xCollection[i]}`, barBasePoint + 5, barHeightPoint - 5)
@@ -269,7 +268,6 @@ export class BarChart {
     this.context.fillStyle = '#000000'
     this.context.font = '15px serif'
     this.context.fillText(`${text}`, 15, 20)
-
     this.#headline = text
   }
 
