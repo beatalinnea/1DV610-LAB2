@@ -14,7 +14,7 @@
 ## Instructions
 - The module can be installed as a npm package in your own project by running ```npm i very-simple-bar-chart``` 
 - When installed in your project, you import the package within your file and are then able to create object of the BarChart type.
-```import { BarChart } from 'very-simple-bar-chart'``
+```import { BarChart } from 'very-simple-bar-chart'```
 ```const barChart = new BarChart(canvas)```
 - For testing and demonstration purposes the project needs to be cloned and dependencies needs to be installed, look further down under 'Example / Test-app'
 - BarChart does NOT create an HTML Canvas Element for you, the constructor needs a Canvas Element, from your own project, as an argument.
