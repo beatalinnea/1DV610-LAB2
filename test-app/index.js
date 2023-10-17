@@ -6,7 +6,8 @@
  * @version 1.0.0
  */
 
-import { BarChart } from 'very-simple-bar-chart'
+// import { BarChart } from 'very-simple-bar-chart'
+import { BarChart } from '../module/barChart.js'
 
 const canvas = document.querySelector('#my-canvas')
 
@@ -25,6 +26,7 @@ try {
     testAddNewValues()
     testValuesAreBeingSorted()
     testHeadlineChange()
+    testAddArrayOfObjects()
 
     // Expected errors
     testInvalidHeadline()
@@ -95,6 +97,15 @@ try {
     // Create a PollDisplay object
     const invalidArgument = new BarChart(2)
     invalidArgument.addValues(['test'])
+  }
+
+  function testAddArrayOfObjects () {
+    const data = []
+    const obj1 = { x: 2, y: 3 }
+    const obj2 = { x: 3, y: 4 }
+    const obj3 = { x: 4, y: 0 }
+    data.push(obj1, obj2, obj3)
+    barChart.addSpecificValues(data)
   }
 } catch (error) {
   console.log(error)

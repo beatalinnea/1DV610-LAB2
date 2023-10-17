@@ -12,6 +12,7 @@ export class BarChart {
   // The canvas element for the BarChart to be showed within
   #canvas
 
+  // TODO: Borde vara ett objekt i stället med x och y?
   // Array of Y values - amount of votes for each X value
   #yCollection = []
 
@@ -136,6 +137,29 @@ export class BarChart {
     } else {
       return false
     }
+  }
+
+  /**
+   * Takes in array of objects with given x and y values. Data must be in the format: [{x: 'value', y: 'value'}, {x: 'value', y: 'value'}].
+   *
+   * @param {object[]} data - The array of data to be added to the BarChart.
+   */
+  addSpecificValues (data) {
+    // format: [{x: 'value', y: 'value'}, {x: 'value', y: 'value'}]
+    if (!Array.isArray(data)) {
+      throw new Error('The argument must be an array')
+    }
+    if (this.#hasData()) {
+      this.#xCollection = []
+      this.#yCollection = []
+      this.#createBase(this.#canvas.width, this.#canvas.height)
+    }
+    for (let i = 0; i < data.length; i++) {
+      this.#xCollection.push(data[i].x)
+      this.#yCollection.push(data[i].y)
+    }
+    this.#buildBars()
+    this.#addBackgroundCounter()
   }
 
   /**
