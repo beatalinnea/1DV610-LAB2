@@ -107,6 +107,7 @@ export class BarChart {
    */
   #renderData () {
     if (this.#hasData()) {
+      this.#sortDataEntries()
       this.#renderBars()
       this.#addBackgroundCounter()
       this.#drawTotalVotes()
@@ -187,7 +188,7 @@ export class BarChart {
     if (this.#hasData()) {
       this.#clearData()
     }
-    this.#updateDataPoints(data)
+    this.#convertToDataEntries(data)
     this.#renderData()
   }
 
@@ -196,14 +197,13 @@ export class BarChart {
    *
    * @param {*} newData - The data to be added to the BarChart.
    */
-  #updateDataPoints (newData) {
-    const sortedData = this.#sortArray(newData)
-    for (const value of sortedData) {
-      const existingPoint = this.#dataEntries.find((point) => point.x === value)
-      if (existingPoint) {
-        existingPoint.y++
+  #convertToDataEntries (newData) {
+    for (const data of newData) {
+      const existingEntry = this.#dataEntries.find((entry) => entry.x === data)
+      if (existingEntry) {
+        existingEntry.y++
       } else {
-        this.#dataEntries.push({ x: value, y: 1 })
+        this.#dataEntries.push({ x: data, y: 1 })
       }
     }
   }
@@ -217,17 +217,8 @@ export class BarChart {
     this.#clearCanvas()
   }
 
-  /**
-   * Sort the array of values.
-   *
-   * @param {any[]} array - The array of values to be sorted.
-   * @returns {any[]} - The sorted array.
-   */
-  #sortArray (array) {
-    return Array.from(array)
-      .sort((a, b) => {
-        return a - b
-      })
+  #sortDataEntries () {
+    this.#dataEntries.sort((a, b) => a.x - b.x)
   }
 
   /**
