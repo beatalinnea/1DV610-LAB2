@@ -19,7 +19,6 @@ try {
   function callOnAllTests () {
     testAddValues()
     testAddHeadline()
-    testAddTotalVotes()
     testChangeBackgroundColor()
     testResize()
     testRemoveHeadline()
@@ -27,6 +26,7 @@ try {
     testValuesAreBeingSorted()
     testHeadlineChange()
     testAddArrayOfObjects()
+    testAddArrayOfObjectsa()
 
     // Expected errors
     testInvalidHeadline()
@@ -42,12 +42,7 @@ try {
 
   function testAddHeadline () {
     // Add a headline
-    barChart.addHeadline('Vilket är ditt favoritdjur?')
-  }
-
-  function testAddTotalVotes () {
-    // Display number of votes
-    barChart.addTotalVotes()
+    barChart.setHeadline('Vilket är ditt favoritdjur?')
   }
 
   function testChangeBackgroundColor () {
@@ -57,12 +52,12 @@ try {
 
   function testResize () {
     // Resize canvas
-    barChart.resize(500, 300)
+    barChart.changeSize(500, 300)
   }
 
   function testRemoveHeadline () {
     // Remove headline
-    barChart.removeHeadline()
+    barChart.clearHeadline()
   }
 
   function testAddNewValues () {
@@ -79,12 +74,12 @@ try {
 
   function testHeadlineChange () {
     // Set new headlines
-    barChart.addHeadline('How many hours do you sleep per day?')
+    barChart.setHeadline('How many hours do you sleep per day?')
   }
 
   function testInvalidHeadline () {
     // Expected error, only accepts strings
-    barChart.addHeadline(2)
+    barChart.setHeadline(2)
   }
 
   function testInvalidData () {
@@ -105,6 +100,16 @@ try {
     const obj2 = { x: 3, y: 4 }
     const obj3 = { x: 4, y: 0 }
     data.push(obj1, obj2, obj3)
+    barChart.addSpecificValues(data)
+  }
+
+  function testAddArrayOfObjectsa () {
+    const data = []
+    const obj3 = { x: 4, y: 5 }
+    const obj1 = { x: 2, y: 3 }
+    const obj2 = { x: 3, y: 4 }
+    const obj4 = { x: 4, y: 6 }
+    data.push(obj3, obj2, obj1, obj4)
     barChart.addSpecificValues(data)
   }
 } catch (error) {

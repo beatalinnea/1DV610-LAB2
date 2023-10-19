@@ -12,18 +12,10 @@ export class BarChart {
   // The canvas element for the BarChart to be showed within
   #canvas
 
-  // TODO: Borde vara ett objekt i stället med x och y?
-  // Array of Y values - amount of votes for each X value
-  #yCollection = []
-
-  // Array of X values - contains each unique value
-  #xCollection = []
+  #dataPoints = []
 
   // The headline - to be showed next to the polls.
   #headline
-
-  // amounf of votes - to be showed next to the polls.
-  #amountOfVotes
 
   // background color - default set to white.
   #backgroundColor = '#ffffff'
@@ -36,15 +28,9 @@ export class BarChart {
    * @param {number} height - the height of the canvas
    */
   constructor (canvas, width, height) {
-    this.#checkIfCanvas(canvas)
-    this.#canvas = canvas
+    this.validateCanvas(canvas)
     this.context = canvas.getContext('2d')
-
-    if (width && height) {
-      this.#createBase(width, height)
-    } else {
-      this.#createBase(400, 300)
-    }
+    this.#setSizeAndBackground(width || 400, height || 300)
   }
 
   /**
@@ -53,10 +39,11 @@ export class BarChart {
    * @param {any} arg - The argument sent in when creating a new instance of the class.
    * @throws {Error} - The argument must be a HTMLCanvasElement.
    */
-  #checkIfCanvas (arg) {
+  validateCanvas (arg) {
     if (!(arg instanceof HTMLCanvasElement)) {
       throw new Error('The argument must be a HTMLCanvasElement')
     }
+    this.#canvas = arg
   }
 
   /**
@@ -65,19 +52,40 @@ export class BarChart {
    * @param {number} width - The width of the BarChart.
    * @param {number} height - The height of the BarChart.
    */
-  #createBase (width, height) {
+  #setSizeAndBackground (width, height) {
     this.#canvas.height = height
     this.#canvas.width = width
-    this.#addBackground()
+    this.#drawBackground()
   }
 
   /**
    * Will add a background to the BarChart. If no color is set - default color will be used.
    */
-  #addBackground () {
+  #drawBackground () {
     this.context.fillStyle = this.#backgroundColor
     this.context.fillRect(0, 0, this.#canvas.width, this.#canvas.height)
-    this.#addFrame()
+    this.#drawFrame()
+  }
+
+  /**
+   * Add a frame to the BarChart.
+   */
+  #drawFrame () {
+    this.context.lineWidth = 5
+    this.context.strokeRect(0, 0, this.#canvas.width, this.#canvas.height)
+  }
+
+  /**
+   * Resize the BarChart.
+   *
+   * @param {number} width - The new width of the BarChart.
+   * @param {number} height - The new height of the BarChart.
+   */
+  changeSize (width, height) {
+    this.#setSizeAndBackground(width, height)
+
+    // If there was data in the BarChart - render it again.
+    this.#renderData()
   }
 
   /**
@@ -87,43 +95,24 @@ export class BarChart {
    */
   changeBackgroundColor (color) {
     this.#backgroundColor = color
-    this.#addBackground()
-    this.#addExistingValues()
-  }
+    this.#drawBackground()
 
-  /**
-   * Resize the BarChart.
-   *
-   * @param {number} width - The new width of the BarChart.
-   * @param {number} height - The new height of the BarChart.
-   */
-  resize (width, height) {
-    this.#createBase(width, height)
-    this.#addExistingValues()
+    // If there was data in the BarChart - render it again.
+    this.#renderData()
   }
 
   /**
    * Checks if there is any data or settings in the BarChart. If so - it will add the existing values.
    */
-  #addExistingValues () {
+  #renderData () {
     if (this.#hasData()) {
-      this.#buildBars()
+      this.#renderBars()
       this.#addBackgroundCounter()
+      this.#drawTotalVotes()
     }
     if (this.#headline) {
-      this.addHeadline(this.#headline)
+      this.setHeadline(this.#headline)
     }
-    if (this.#amountOfVotes) {
-      this.addTotalVotes()
-    }
-  }
-
-  /**
-   * Add a frame to the BarChart.
-   */
-  #addFrame () {
-    this.context.lineWidth = 5
-    this.context.strokeRect(0, 0, this.#canvas.width, this.#canvas.height)
   }
 
   /**
@@ -132,10 +121,31 @@ export class BarChart {
    * @returns {boolean} - true if there is data, false if not.
    */
   #hasData () {
-    if (this.#xCollection.length > 0) {
-      return true
-    } else {
-      return false
+    return this.#dataPoints.length > 0
+  }
+
+  /**
+   * Renders the bars to the BarChart.
+   */
+  #renderBars () {
+    const maxValue = this.#checkMostVotes()
+    let barBasePoint = this.#canvas.width / (this.#dataPoints.length + 1)
+    const distanceBetweenBars = barBasePoint
+    const onePartOfHeight = this.#canvas.height / (maxValue + 1)
+    const margin = 5
+
+    for (let i = 0; i < this.#dataPoints.length; i++) {
+      const dataPoint = this.#dataPoints[i]
+      const barHeightPoint = this.#canvas.height - (dataPoint.y * onePartOfHeight)
+      this.#drawOneBar(barBasePoint, barHeightPoint)
+
+      this.context.fillStyle = '#000000'
+      this.context.font = '15px serif'
+
+      // Display the x value at the bottom-right of the bar
+      const textWidth = this.context.measureText(`${dataPoint.x}`).width
+      this.context.fillText(`${dataPoint.x}`, barBasePoint - textWidth - margin, this.#canvas.height - margin)
+      barBasePoint += distanceBetweenBars
     }
   }
 
@@ -147,19 +157,14 @@ export class BarChart {
   addSpecificValues (data) {
     // format: [{x: 'value', y: 'value'}, {x: 'value', y: 'value'}]
     if (!Array.isArray(data)) {
-      throw new Error('The argument must be an array')
+      throw new Error('The argument must be an array of objects with x and y values')
     }
     if (this.#hasData()) {
-      this.#xCollection = []
-      this.#yCollection = []
-      this.#createBase(this.#canvas.width, this.#canvas.height)
+      console.log('we already have data!')
+      this.#clearData()
     }
-    for (let i = 0; i < data.length; i++) {
-      this.#xCollection.push(data[i].x)
-      this.#yCollection.push(data[i].y)
-    }
-    this.#buildBars()
-    this.#addBackgroundCounter()
+    this.#dataPoints = data
+    this.#renderData()
   }
 
   /**
@@ -171,24 +176,37 @@ export class BarChart {
     if (!Array.isArray(data)) {
       throw new Error('The argument must be an array')
     }
-    const sorted = this.#sortArray(data)
     if (this.#hasData()) {
-      this.#xCollection = []
-      this.#yCollection = []
-      this.#createBase(this.#canvas.width, this.#canvas.height)
+      this.#clearData()
     }
-    for (let i = 0; i < sorted.length; i++) {
-      // NOTE: this would preferabbly be moved to a separate method.
-      if (this.#xCollection.includes(sorted[i])) {
-        const index = this.#xCollection.indexOf(sorted[i])
-        this.#yCollection[index] = this.#yCollection[index] + 1
+    this.#updateDataPoints(data)
+    this.#renderData()
+  }
+
+  /**
+   * Update the data points.
+   *
+   * @param {*} newData - The data to be added to the BarChart.
+   */
+  #updateDataPoints (newData) {
+    const sortedData = this.#sortArray(newData)
+    for (const value of sortedData) {
+      const existingPoint = this.#dataPoints.find((point) => point.x === value)
+      if (existingPoint) {
+        existingPoint.y++
       } else {
-        this.#xCollection.push(sorted[i])
-        this.#yCollection.push(1)
+        this.#dataPoints.push({ x: value, y: 1 })
       }
     }
-    this.#buildBars()
-    this.#addBackgroundCounter()
+  }
+
+  /**
+   * Clears the data.
+   */
+  #clearData () {
+    this.#dataPoints = []
+    this.clearHeadline()
+    this.#clearCanvas()
   }
 
   /**
@@ -205,36 +223,16 @@ export class BarChart {
   }
 
   /**
-   * Builds the bars for the BarChart.
-   */
-  #buildBars () {
-    // divide with + 1 to keep marginal to the sides
-    let barBasePoint = this.#canvas.width / (this.#xCollection.length + 1)
-    const distanceBetweenBars = barBasePoint
-    const maxValue = this.#checkMostVotes()
-
-    // divide with + 1 to keep marginal to the top.
-    const onePartOfHeight = this.#canvas.height / (maxValue + 1)
-
-    for (let i = 0; i < this.#xCollection.length; i++) {
-      const barHeightPoint = this.#canvas.height - (this.#yCollection[i] * onePartOfHeight)
-      this.#drawOneBar(barBasePoint, barHeightPoint)
-
-      // NOTE: adding text should be moved to a separate method.
-      this.context.fillStyle = '#000000'
-      this.context.font = '15px serif'
-      this.context.fillText(`${this.#xCollection[i]}`, barBasePoint + 5, barHeightPoint - 5)
-      barBasePoint = barBasePoint + distanceBetweenBars
-    }
-  }
-
-  /**
    * Draw one bar.
    *
    * @param {number} base - The base point of the bar.
    * @param {number} top - The top point of the bar.
    */
   #drawOneBar (base, top) {
+    // If the bar is too small, make it 5px high
+    if (top === this.#canvas.height) {
+      top -= 5
+    }
     this.context.beginPath()
     this.context.moveTo(base, this.#canvas.height)
     this.context.lineTo(base, top)
@@ -268,12 +266,17 @@ export class BarChart {
    * @returns {number} - The number of votes for the poll with most votes.
    */
   #checkMostVotes () {
-    let mostVotes = 0
-    for (let i = 0; i < this.#yCollection.length; i++) {
-      if (this.#yCollection[i] > mostVotes) {
-        mostVotes = this.#yCollection[i]
+    if (this.#dataPoints.length === 0) {
+      throw new Error('There is no data to be shown')
+    }
+    let mostVotes = this.#dataPoints[0].y // Initialize with the first data point.
+
+    for (const dataPoint of this.#dataPoints) {
+      if (dataPoint.y > mostVotes) {
+        mostVotes = dataPoint.y
       }
     }
+
     return mostVotes
   }
 
@@ -282,28 +285,32 @@ export class BarChart {
    *
    * @param {string} text - The text to be used as headline.
    */
-  addHeadline (text) {
+  setHeadline (text) {
     if (typeof text !== 'string') {
       throw new Error('The argument must be a string')
     }
     if (this.#headline) {
-      this.#clearHeadline()
+      this.clearHeadline()
     }
+    this.#headline = text
+    this.#drawHeadline()
+  }
+
+  // eslint-disable-next-line jsdoc/require-jsdoc
+  #drawHeadline () {
     this.context.fillStyle = '#000000'
     this.context.font = '15px serif'
-    this.context.fillText(`${text}`, 15, 20)
-    this.#headline = text
+    this.context.fillText(`${this.#headline}`, 15, 20)
   }
 
   /**
    * Views the total amount of votes on the BarChart.
    */
-  addTotalVotes () {
+  #drawTotalVotes () {
     const numberOfVotes = this.getAmountOfVotes()
     this.context.fillStyle = '#000000'
     this.context.font = '15px serif'
     this.context.fillText(`Votes: ${numberOfVotes}`, this.#canvas.width - 80, 20)
-    this.#amountOfVotes = numberOfVotes
   }
 
   /**
@@ -312,33 +319,25 @@ export class BarChart {
    * @returns {number} - The total amount of votes.
    */
   getAmountOfVotes () {
-    let voteCount = 0
-    for (let i = 0; i < this.#yCollection.length; i++) {
-      voteCount = voteCount + this.#yCollection[i]
-    }
-    return voteCount
-  }
-
-  /**
-   * Clears the headline.
-   */
-  #clearHeadline () {
-    this.#headline = null
-    this.context.clearRect(0, 0, this.#canvas.width, 30)
-    this.context.fillStyle = this.#backgroundColor
-    this.context.fillRect(0, 0, this.#canvas.width, 30)
-    this.#addFrame()
+    return this.#dataPoints.reduce((total, point) => total + point.y, 0)
   }
 
   /**
    * Removes the headline and/or the total amount of votes.
    */
-  removeHeadline () {
+  clearHeadline () {
     this.context.clearRect(0, 0, this.#canvas.width, 30)
     this.#headline = null
-    this.#amountOfVotes = null
     this.context.fillStyle = this.#backgroundColor
     this.context.fillRect(0, 0, this.#canvas.width, 30)
-    this.#addFrame()
+    this.#drawFrame()
+  }
+
+  /**
+   * Clears the canvas.
+   */
+  #clearCanvas () {
+    this.context.clearRect(0, 0, this.#canvas.width, this.#canvas.height)
+    this.#drawBackground() // Redraw the background.
   }
 }

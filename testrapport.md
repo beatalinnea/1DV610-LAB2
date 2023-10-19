@@ -12,7 +12,6 @@ Test-appen innehåller 13 metoder som anropas när appen startar. För att testa
 |------|---------|---------|
 |addValues(data) - Förväntas fylla canvas elementet med ett stapeldiagram där respektive värde blir ett steg högre för varje gång det förekommer i arrayen.|testAddValues() anropar BarChart.addValues([’ett’, ’två’]).|OK|
 |addHeadline(text) - Förväntas visa texten (argumentet) som en rubrik intill stapeldiagrammet.|testAddHeadline() anropar BarChart.addHeadline(’rubrik’)|OK|
-|addTotalVotes() - Förväntas visa det totala antalet ”röster” (element i arrayen) som ytterligare en rubrik intill stapeldiagrammet.|testAddTotalVotes() anropar BarChart.addTotalVotes()|OK|
 |changeBackgroundColor(color) - Förväntas ändra färgen på canvaselementet (vilket innebär ändra färgen på bakgrunden till ett befintligt diagram) till den angiven som argument.|(Testet förutsätter att BarChart inte redan bakgrundsfärgen satt till #efdefd) testChangeBackgroundColor() anropar BarChart.changeBackgroundColor(’#efdefd’)|OK|
 |resize(width, height) - Förväntas ändra storleken på canvaselementet (vilket innebär ändra storleken på ett befintligt diagram) till det angivet som argument.|(Testet förutsätter att BarChart inte redan har width: 500, height: 300) testResize() anropar BarChart.resize(500, 300)|OK|
 |removeHeadline() - Förväntas ta bort eventuell befintlig rubrik intill diagrammet.|(Testet förutsätter att BarChart har en befintlig rubrik) testRemoveHeadline() anropar BarChart.removeHeadline()|OK|
