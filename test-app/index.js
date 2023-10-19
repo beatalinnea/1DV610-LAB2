@@ -105,7 +105,7 @@ try {
 
   function testAddArrayOfObjectsa () {
     const data = []
-    const obj3 = { x: 4, y: 5 }
+    const obj3 = { x: 'hej', y: 5 }
     const obj1 = { x: 2, y: 3 }
     const obj2 = { x: 3, y: 4 }
     const obj4 = { x: 4, y: 6 }

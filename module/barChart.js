@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/require-jsdoc */
 /**
  * The the main and only class for the BarChart module.
  *
@@ -12,7 +13,7 @@ export class BarChart {
   // The canvas element for the BarChart to be showed within
   #canvas
 
-  #dataPoints = []
+  #dataEntries = []
 
   // The headline - to be showed next to the polls.
   #headline
@@ -121,32 +122,39 @@ export class BarChart {
    * @returns {boolean} - true if there is data, false if not.
    */
   #hasData () {
-    return this.#dataPoints.length > 0
+    return this.#dataEntries.length > 0
   }
 
-  /**
-   * Renders the bars to the BarChart.
-   */
   #renderBars () {
     const maxValue = this.#checkMostVotes()
-    let barBasePoint = this.#canvas.width / (this.#dataPoints.length + 1)
-    const distanceBetweenBars = barBasePoint
-    const onePartOfHeight = this.#canvas.height / (maxValue + 1)
-    const margin = 5
+    let barBasePoint = this.#calculateBarBasePoint(maxValue)
 
-    for (let i = 0; i < this.#dataPoints.length; i++) {
-      const dataPoint = this.#dataPoints[i]
-      const barHeightPoint = this.#canvas.height - (dataPoint.y * onePartOfHeight)
+    for (const data of this.#dataEntries) {
+      const barHeightPoint = this.#calculateBarHeightPoint(data, maxValue)
       this.#drawOneBar(barBasePoint, barHeightPoint)
-
-      this.context.fillStyle = '#000000'
-      this.context.font = '15px serif'
-
-      // Display the x value at the bottom-right of the bar
-      const textWidth = this.context.measureText(`${dataPoint.x}`).width
-      this.context.fillText(`${dataPoint.x}`, barBasePoint - textWidth - margin, this.#canvas.height - margin)
-      barBasePoint += distanceBetweenBars
+      this.#drawTextToBar(data, barBasePoint)
+      barBasePoint += this.#calculateDistanceBetweenBars()
     }
+  }
+
+  #calculateBarBasePoint (maxValue) {
+    return this.#canvas.width / (this.#dataEntries.length + 1)
+  }
+
+  #calculateBarHeightPoint (dataPoint, maxValue) {
+    const onePartOfHeight = this.#canvas.height / (maxValue + 1)
+    return this.#canvas.height - (dataPoint.y * onePartOfHeight)
+  }
+
+  #drawTextToBar (dataPoint, barBasePoint) {
+    this.context.fillStyle = '#000000'
+    this.context.font = '15px serif'
+    const textWidth = this.context.measureText(`${dataPoint.x}`).width
+    this.context.fillText(`${dataPoint.x}`, barBasePoint - textWidth - 5, this.#canvas.height - 5)
+  }
+
+  #calculateDistanceBetweenBars () {
+    return this.#canvas.width / (this.#dataEntries.length + 1)
   }
 
   /**
@@ -163,7 +171,7 @@ export class BarChart {
       console.log('we already have data!')
       this.#clearData()
     }
-    this.#dataPoints = data
+    this.#dataEntries = data
     this.#renderData()
   }
 
@@ -191,11 +199,11 @@ export class BarChart {
   #updateDataPoints (newData) {
     const sortedData = this.#sortArray(newData)
     for (const value of sortedData) {
-      const existingPoint = this.#dataPoints.find((point) => point.x === value)
+      const existingPoint = this.#dataEntries.find((point) => point.x === value)
       if (existingPoint) {
         existingPoint.y++
       } else {
-        this.#dataPoints.push({ x: value, y: 1 })
+        this.#dataEntries.push({ x: value, y: 1 })
       }
     }
   }
@@ -204,7 +212,7 @@ export class BarChart {
    * Clears the data.
    */
   #clearData () {
-    this.#dataPoints = []
+    this.#dataEntries = []
     this.clearHeadline()
     this.#clearCanvas()
   }
@@ -266,12 +274,12 @@ export class BarChart {
    * @returns {number} - The number of votes for the poll with most votes.
    */
   #checkMostVotes () {
-    if (this.#dataPoints.length === 0) {
+    if (this.#dataEntries.length === 0) {
       throw new Error('There is no data to be shown')
     }
-    let mostVotes = this.#dataPoints[0].y // Initialize with the first data point.
+    let mostVotes = this.#dataEntries[0].y // Initialize with the first data point.
 
-    for (const dataPoint of this.#dataPoints) {
+    for (const dataPoint of this.#dataEntries) {
       if (dataPoint.y > mostVotes) {
         mostVotes = dataPoint.y
       }
@@ -319,7 +327,7 @@ export class BarChart {
    * @returns {number} - The total amount of votes.
    */
   getAmountOfVotes () {
-    return this.#dataPoints.reduce((total, point) => total + point.y, 0)
+    return this.#dataEntries.reduce((total, point) => total + point.y, 0)
   }
 
   /**
