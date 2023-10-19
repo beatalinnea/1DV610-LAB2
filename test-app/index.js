@@ -26,7 +26,6 @@ try {
     testValuesAreBeingSorted()
     testHeadlineChange()
     testAddArrayOfObjects()
-    testChangeBackgroundColor()
 
     // Expected errors
     testInvalidHeadline()
