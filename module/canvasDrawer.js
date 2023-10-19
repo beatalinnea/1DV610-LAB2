@@ -1,4 +1,11 @@
-/* eslint-disable jsdoc/require-jsdoc */
+/**
+ * @author Beata Eriksson <be222gr@student.lnu.se>
+ * @version 1.1.0
+ */
+
+/**
+ * Class that provides functions for drawing on, adding text to and editing a canvas element.
+ */
 export class CanvasDrawer {
   #canvas
   #context
@@ -22,7 +29,7 @@ export class CanvasDrawer {
 
   setDrawColor (color) {
     if (!/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color)) {
-      throw new Error('Invalid color format. Please use a valid hexadecimal color code (e.g., "#FF0000").')
+      throw new Error('Invalid color format. Use a valid hexadecimal color code (e.g., "#FF0000").')
     }
     this.#drawColor = color
   }

@@ -1,6 +1,5 @@
-/* eslint-disable jsdoc/require-jsdoc */
 /**
- * The the main and only class for the BarChart module.
+ * The the main class for the BarChart module.
  *
  * @author Beata Eriksson <be222gr@student.lnu.se>
  * @version 1.1.0
@@ -9,26 +8,31 @@
 import { CanvasDrawer } from './canvasDrawer.js'
 
 /**
- * Class for the BarChart module.
+ * Representing the Bar Chart module for visualizing data.
+ * This class provides functionality to create and display a bar chart on an HTML canvas element.
  */
 export class BarChart {
-  #drawer
   #canvas
 
+  // The CanvasDrawer will be responsible for editing the canvas.
+  #canvasDrawer
+
+  // Where the users sent in data will be collected.
   #dataEntries = []
 
+  // The users chosen headline for their bar chart.
   #headline
 
   /**
-   * Constructor for canvas class.
+   * Constructor for canvas class. Possible to set width and height of the canvas.
    *
-   * @param {HTMLCanvasElement} canvas - the canvas element
-   * @param {number} width - the width of the canvas
-   * @param {number} height - the height of the canvas
+   * @param {HTMLCanvasElement} canvas - the canvas element to be used.
+   * @param {number} width - the width of the canvas - default 400.
+   * @param {number} height - the height of the canvas - default 300.
    */
   constructor (canvas, width, height) {
     this.#validateCanvas(canvas)
-    this.#drawer = new CanvasDrawer(canvas)
+    this.#canvasDrawer = new CanvasDrawer(canvas)
     this.#setSizeAndBackground(width || 400, height || 300)
   }
 
@@ -40,8 +44,9 @@ export class BarChart {
   }
 
   /**
-   * Add values to the BarChart. Input data can be in the format:
-   * [{x: 'value', y: 'value'}, {x: 'value', y: 'value'}] or [x, x, x, ...].
+   * Add values to the BarChart. Input data can be in the formats:
+   * [{x: 'value', y: 'value'}, {x: 'value', y: 'value'}] or [x, x, x, ...] or:
+   * [x, x, x, ...] where this would give x value 3 for y.
    *
    * @param {any[]} data - The array of data to be added to the BarChart.
    */
@@ -64,7 +69,7 @@ export class BarChart {
   }
 
   changeBackgroundColor (color) {
-    this.#drawer.setBackgroundColor(color)
+    this.#canvasDrawer.setBackgroundColor(color)
     this.#renderData()
   }
 
@@ -76,7 +81,7 @@ export class BarChart {
       this.clearHeadline()
     }
     this.#headline = text
-    this.#drawer.addLeftHeadline(this.#headline)
+    this.#canvasDrawer.addLeftHeadline(this.#headline)
   }
 
   clearHeadline () {
@@ -88,10 +93,15 @@ export class BarChart {
     return this.#dataEntries.reduce((total, point) => total + point.y, 0)
   }
 
-  #setSizeAndBackground (width, height) {
-    this.#canvas.height = height
-    this.#canvas.width = width
-    this.#drawer.drawBackground()
+  #convertToDataEntries (values) {
+    for (const value of values) {
+      const existingEntry = this.#dataEntries.find((entry) => entry.x === value)
+      if (existingEntry) {
+        existingEntry.y++
+      } else {
+        this.#dataEntries.push({ x: value, y: 1 })
+      }
+    }
   }
 
   #renderData () {
@@ -99,7 +109,7 @@ export class BarChart {
       this.#sortDataEntries()
       this.#renderBars()
       this.#addBackgroundLines()
-      this.#drawer.addLeftHeadline(`Votes: ${this.getAmountOfVotes()}`)
+      this.#canvasDrawer.addLeftHeadline(`Votes: ${this.getAmountOfVotes()}`)
     }
     if (this.#headline) {
       this.addHeadline(this.#headline)
@@ -110,14 +120,18 @@ export class BarChart {
     return this.#dataEntries.length > 0
   }
 
+  #sortDataEntries () {
+    this.#dataEntries.sort((a, b) => a.x - b.x)
+  }
+
   #renderBars () {
-    const maxValue = this.#checkMostVotes()
+    const maxValue = this.#getMostAmountOfVotes()
     let barBasePoint = this.#calculateBarBasePoint()
 
     for (const data of this.#dataEntries) {
       const barHeightPoint = this.#calculateBarHeightPoint(data, maxValue)
-      this.#drawer.drawBar(barBasePoint, barHeightPoint)
-      this.#drawer.addBarText(data.x, barBasePoint)
+      this.#canvasDrawer.drawBar(barBasePoint, barHeightPoint)
+      this.#canvasDrawer.addBarText(data.x, barBasePoint)
       barBasePoint += this.#calculateDistanceBetweenBars()
     }
   }
@@ -135,44 +149,18 @@ export class BarChart {
     return this.#canvas.width / (this.#dataEntries.length + 1)
   }
 
-  /**
-   * Converts array of single values to array of objects with x and y values.
-   *
-   * @param {any[]} newData - The data to be added to the BarChart.
-   */
-  #convertToDataEntries (newData) {
-    for (const data of newData) {
-      const existingEntry = this.#dataEntries.find((entry) => entry.x === data)
-      if (existingEntry) {
-        existingEntry.y++
-      } else {
-        this.#dataEntries.push({ x: data, y: 1 })
-      }
-    }
-  }
-
-  #clearData () {
-    this.#dataEntries = []
-    this.clearHeadline()
-    this.#drawer.clearCanvas()
-  }
-
-  #sortDataEntries () {
-    this.#dataEntries.sort((a, b) => a.x - b.x)
-  }
-
   #addBackgroundLines () {
-    const maxVotes = this.#checkMostVotes()
+    const maxVotes = this.#getMostAmountOfVotes()
     const onePartOfHeight = this.#canvas.height / (maxVotes + 1)
 
     for (let i = 0; i < maxVotes; i++) {
       const lineHeight = onePartOfHeight * (i + 1)
-      this.#drawer.drawHorizontalLine(lineHeight)
-      this.#drawer.addAxisValue(lineHeight, maxVotes - i)
+      this.#canvasDrawer.drawHorizontalLine(lineHeight)
+      this.#canvasDrawer.addAxisValue(lineHeight, maxVotes - i)
     }
   }
 
-  #checkMostVotes () {
+  #getMostAmountOfVotes () {
     if (this.#dataEntries.length === 0) {
       throw new Error('There is no data to be shown')
     }
@@ -183,5 +171,17 @@ export class BarChart {
       }
     }
     return mostVotes
+  }
+
+  #setSizeAndBackground (width, height) {
+    this.#canvas.height = height
+    this.#canvas.width = width
+    this.#canvasDrawer.drawBackground()
+  }
+
+  #clearData () {
+    this.#dataEntries = []
+    this.clearHeadline()
+    this.#canvasDrawer.clearCanvas()
   }
 }
