@@ -21,6 +21,8 @@ export class BarChart {
   // background color - default set to white.
   #backgroundColor = '#ffffff'
 
+  #margin = 5
+
   /**
    * Constructor for canvas class.
    *
@@ -109,8 +111,8 @@ export class BarChart {
     if (this.#hasData()) {
       this.#sortDataEntries()
       this.#renderBars()
-      this.#addBackgroundCounter()
-      this.#drawTotalVotes()
+      this.#addBackgroundLines()
+      this.#viewTotalVotes()
     }
     if (this.#headline) {
       this.setHeadline(this.#headline)
@@ -128,17 +130,17 @@ export class BarChart {
 
   #renderBars () {
     const maxValue = this.#checkMostVotes()
-    let barBasePoint = this.#calculateBarBasePoint(maxValue)
+    let barBasePoint = this.#calculateBarBasePoint()
 
     for (const data of this.#dataEntries) {
       const barHeightPoint = this.#calculateBarHeightPoint(data, maxValue)
       this.#drawOneBar(barBasePoint, barHeightPoint)
-      this.#drawTextToBar(data, barBasePoint)
+      this.#viewBarValue(data, barBasePoint)
       barBasePoint += this.#calculateDistanceBetweenBars()
     }
   }
 
-  #calculateBarBasePoint (maxValue) {
+  #calculateBarBasePoint () {
     return this.#canvas.width / (this.#dataEntries.length + 1)
   }
 
@@ -147,11 +149,16 @@ export class BarChart {
     return this.#canvas.height - (dataPoint.y * onePartOfHeight)
   }
 
-  #drawTextToBar (dataPoint, barBasePoint) {
+  #viewBarValue (dataEntry, barBasePoint) {
     this.context.fillStyle = '#000000'
     this.context.font = '15px serif'
-    const textWidth = this.context.measureText(`${dataPoint.x}`).width
-    this.context.fillText(`${dataPoint.x}`, barBasePoint - textWidth - 5, this.#canvas.height - 5)
+
+    const text = `${dataEntry.x}`
+    const textWidth = this.context.measureText(text).width
+    const xPosition = barBasePoint - textWidth - this.#margin
+    const yPosition = this.#canvas.height - this.#margin
+
+    this.context.fillText(text, xPosition, yPosition)
   }
 
   #calculateDistanceBetweenBars () {
@@ -195,7 +202,7 @@ export class BarChart {
   /**
    * Update the data points.
    *
-   * @param {*} newData - The data to be added to the BarChart.
+   * @param {any[]} newData - The data to be added to the BarChart.
    */
   #convertToDataEntries (newData) {
     for (const data of newData) {
@@ -228,9 +235,9 @@ export class BarChart {
    * @param {number} top - The top point of the bar.
    */
   #drawOneBar (base, top) {
-    // If the bar is too small, make it 5px high
+    // If the bar is too small, give it some height.
     if (top === this.#canvas.height) {
-      top -= 5
+      top -= this.#margin
     }
     this.context.beginPath()
     this.context.moveTo(base, this.#canvas.height)
@@ -239,43 +246,45 @@ export class BarChart {
     this.context.stroke()
   }
 
-  /**
-   * Adds horisontal lines to the BarChart background to show the amount of votes for each poll.
-   */
-  #addBackgroundCounter () {
-    const max = this.#checkMostVotes()
-    this.context.lineWidth = 0.2
-    const onePartOfHeight = this.#canvas.height / (max + 1)
-    for (let i = 0; i < max; i++) {
-      this.context.beginPath()
-      this.context.moveTo(0, onePartOfHeight * (i + 1))
-      this.context.lineTo(this.#canvas.width, onePartOfHeight * (i + 1))
-      this.context.closePath()
-      this.context.stroke()
+  #addBackgroundLines () {
+    const maxVotes = this.#checkMostVotes()
+    const onePartOfHeight = this.#canvas.height / (maxVotes + 1)
 
-      this.context.fillStyle = '#000000'
-      this.context.font = '15px serif'
-      this.context.fillText(`${max - i}`, 5, (onePartOfHeight * (i + 1) - 3))
+    for (let i = 0; i < maxVotes; i++) {
+      const lineHeight = onePartOfHeight * (i + 1)
+      this.#drawHorizontalLine(lineHeight)
+      this.#viewAxisValue(lineHeight, maxVotes - i)
     }
   }
 
-  /**
-   * Checks which poll has the most votes.
-   *
-   * @returns {number} - The number of votes for the poll with most votes.
-   */
+  #drawHorizontalLine (height) {
+    this.context.lineWidth = 0.2
+    this.context.beginPath()
+    this.context.moveTo(0, height)
+    this.context.lineTo(this.#canvas.width, height)
+    this.context.closePath()
+    this.context.stroke()
+  }
+
+  #viewAxisValue (height, valueText) {
+    this.context.lineWidth = 0.2
+    this.context.fillStyle = '#000000'
+    this.context.font = '15px serif'
+    this.context.fillText(`${valueText}`, this.#margin, (height - 5))
+  }
+
   #checkMostVotes () {
     if (this.#dataEntries.length === 0) {
       throw new Error('There is no data to be shown')
     }
-    let mostVotes = this.#dataEntries[0].y // Initialize with the first data point.
-
-    for (const dataPoint of this.#dataEntries) {
-      if (dataPoint.y > mostVotes) {
-        mostVotes = dataPoint.y
+    // Iterate to see which entry has the most votes,
+    // start comparing with the first entry.
+    let mostVotes = this.#dataEntries[0].y
+    for (const entry of this.#dataEntries) {
+      if (entry.y > mostVotes) {
+        mostVotes = entry.y
       }
     }
-
     return mostVotes
   }
 
@@ -292,11 +301,11 @@ export class BarChart {
       this.clearHeadline()
     }
     this.#headline = text
-    this.#drawHeadline()
+    this.#viewHeadline()
   }
 
   // eslint-disable-next-line jsdoc/require-jsdoc
-  #drawHeadline () {
+  #viewHeadline () {
     this.context.fillStyle = '#000000'
     this.context.font = '15px serif'
     this.context.fillText(`${this.#headline}`, 15, 20)
@@ -305,7 +314,7 @@ export class BarChart {
   /**
    * Views the total amount of votes on the BarChart.
    */
-  #drawTotalVotes () {
+  #viewTotalVotes () {
     const numberOfVotes = this.getAmountOfVotes()
     this.context.fillStyle = '#000000'
     this.context.font = '15px serif'
