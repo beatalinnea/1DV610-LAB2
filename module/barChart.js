@@ -109,7 +109,7 @@ export class BarChart {
       this.#sortDataEntries()
       this.#renderBars()
       this.#addBackgroundLines()
-      this.#canvasDrawer.addLeftHeadline(`Votes: ${this.getAmountOfVotes()}`)
+      this.#canvasDrawer.addRightHeadline(`Total: ${this.getAmountOfVotes()}`)
     }
     if (this.#headline) {
       this.addHeadline(this.#headline)

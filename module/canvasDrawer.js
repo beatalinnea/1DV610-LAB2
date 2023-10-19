@@ -87,13 +87,13 @@ export class CanvasDrawer {
     this.drawText(text, xPosition, yPosition)
   }
 
-  addLeftHeadline (text) {
+  addRightHeadline (text) {
     const x = this.#canvas.width - 80
     const y = 20
     this.drawText(`${text}`, x, y)
   }
 
-  addRightHeadline (text) {
+  addLeftHeadline (text) {
     const x = 15
     const y = 20
     this.drawText(`${text}`, x, y)
