@@ -5,7 +5,7 @@ Min modul har testats genom att skapa ett användargränssnitt i webbläsaren - 
 
 För att starta test-appen används Vite som är en devDependency i projektet. Efter att projektet klonats installeras projektets beroenden med ’npm install’. För att starta test-appen används kommandot ’npm run dev’.
 
-Test-appen innehåller 13 metoder som anropas när appen startar. För att testa modulen skapar test-appen en instans av modulens (enda) huvudklass BarChart och testar det publika interfacet genom att anropa BarCharts metoder. Testningen har skett genom att test-apps metodanrop har kommenterats bort för att inledningsvis köra det första metodanropet - sedan lägga till det andra, och till slut köra samtliga testmetoder. Observera att tre av testmetoderna förväntas att ge felmeddelanden i konsollen - dessa behöver testas separat då metoderna som anropas efter ett fel inte kommer att köras.
+Test-appen innehåller 12 metoder som anropas när appen startar. För att testa modulen skapar test-appen en instans av modulens (enda) huvudklass BarChart och testar det publika interfacet genom att anropa BarCharts metoder. Testningen har skett genom att test-apps metodanrop har kommenterats bort för att inledningsvis köra det första metodanropet - sedan lägga till det andra, och till slut köra samtliga testmetoder. Observera att tre av testmetoderna förväntas att ge felmeddelanden i konsollen - dessa behöver testas separat då metoderna som anropas efter ett fel inte kommer att köras.
 
 ## Testrapport
 | **Vad som testats (metodnamn/krav)** | **Hur det testats** | **Testresultat** |
@@ -17,7 +17,7 @@ Test-appen innehåller 13 metoder som anropas när appen startar. För att testa
 |removeHeadline() - Förväntas ta bort eventuell befintlig rubrik intill diagrammet.|(Testet förutsätter att BarChart har en befintlig rubrik) testRemoveHeadline() anropar BarChart.removeHeadline()|OK|
 |addValues(data) - Stapeldiagrammet förväntas uppdateras vid nytt metodanrop.|testAddNewValues() anropar BarChart.addValues([1, 2])|OK*|
 |addValues(data) - Stapeldiagrammets x-värden sorteras i storleksordning om datan består av siffror.|testValuesAreBeingSorted() anropar BarChart.addValues([2, 9, 4, 1, 10])|OK|
-|addSpecificValues(data) - Modulen tar emot data med givna x och y värden i formatet [{x: 'ex', y: 2}] |testAddArrayOfObjects() anropar BarChart.addSpecificValues[{x: 'ex', y: 2}, {x: 2, y: 3}]|OK|
+|addValues(data) - Modulen tar emot data med givna x och y värden i formatet [{x: 'ex', y: 2}] |testAddArrayOfObjects() anropar BarChart.addValues[{x: 'ex', y: 2}, {x: 2, y: 3}]|OK|
 |addHeadline(text) - Förväntas visa ny rubrik om metoden anropas fastän där redan finns en befintlig rubrik.|(Testet förutsätter att BarChart har en befintlig rubrik) testHeadlineChange() anropar BarChart.addHeadline(’ny rubrik’)|OK|
 |addHeadline(text) - Förväntas ge error om argument inte är en sträng (testappen visar error i webbläsarens console)|testInvalidHeadline() anropar BarChart.addHeadline(2)|OK|
 |addValues(data) - Förväntas ge error om argument inte är en array.|testInvalidData() anropar BarChart.addValues(’test’)|OK|
