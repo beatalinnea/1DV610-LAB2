@@ -64,27 +64,6 @@ export class BarChart {
   }
 
   /**
-   * This method will change the size for the BarChart and re-render it.
-   *
-   * @param {number} width - the new width of the BarChart.
-   * @param {number} height - the new height of the BarChart.
-   */
-  changeSize (width, height) {
-    this.#setSizeAndBackground(width, height)
-    this.#renderData()
-  }
-
-  /**
-   * This method will change background color for the BarChart and re-render it.
-   *
-   * @param {string} color - the new background color of the BarChart.
-   */
-  changeBackgroundColor (color) {
-    this.#canvasDrawer.setBackgroundColor(color)
-    this.#renderData()
-  }
-
-  /**
    * Will add a chosen headline to the BarChart.
    *
    * @param {string} text - The text to be viewed within the BarChart.
@@ -105,6 +84,27 @@ export class BarChart {
    */
   clearHeadline () {
     this.#headline = null
+    this.#renderData()
+  }
+
+  /**
+   * This method will change the size for the BarChart and re-render it.
+   *
+   * @param {number} width - the new width of the BarChart.
+   * @param {number} height - the new height of the BarChart.
+   */
+  changeSize (width, height) {
+    this.#setSizeAndBackground(width, height)
+    this.#renderData()
+  }
+
+  /**
+   * This method will change background color for the BarChart and re-render it.
+   *
+   * @param {string} color - the new background color of the BarChart.
+   */
+  changeBackgroundColor (color) {
+    this.#canvasDrawer.setBackgroundColor(color)
     this.#renderData()
   }
 
